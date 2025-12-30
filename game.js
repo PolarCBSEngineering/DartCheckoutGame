@@ -243,17 +243,7 @@ function openZoneModal(zoneId) {
         numberButtons.appendChild(group);
     });
 
-    const score = parseInt(btn.getAttribute('data-score'));
-    const notation = btn.getAttribute('data-notation');
-
-    // Visual feedback
-    btn.style.background = 'var(--accent-gold)';
-    btn.style.color = '#000';
-
-    setTimeout(() => throwDart(score, notation), 50);
-};
-
-modal.classList.remove('d-none');
+    modal.classList.remove('d-none');
 }
 
 function getDartScore(type, number) {
