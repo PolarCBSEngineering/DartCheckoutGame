@@ -29,6 +29,17 @@ body {
     overflow-x: hidden;
 }
 
+/* UI Utility Classes */
+.d-none {
+    display: none !important;
+}
+
+.hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
 /* Header */
 .header {
     padding: 1rem;
