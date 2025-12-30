@@ -417,7 +417,12 @@ function showResultModal() {
 function updateUI() {
     document.getElementById('targetScore').textContent = gameState.targetScore;
     document.getElementById('currentScore').textContent = gameState.currentScore;
-    document.getElementById('headerTotalScore').textContent = gameState.totalPoints;
+
+    // Updated cumulative format: Current/Possible
+    const maxPossible = gameState.sessionGames * 100;
+    document.getElementById('headerTotalScore').textContent = maxPossible > 0
+        ? `${gameState.totalPoints}/${maxPossible}`
+        : '0';
 
     for (let i = 1; i <= 3; i++) {
         const el = document.getElementById(`dart${i}`);
