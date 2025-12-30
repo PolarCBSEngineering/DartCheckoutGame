@@ -5,6 +5,7 @@ Dart oyuncuları için 40-170 arası checkout senaryolarını pratik yapabilece�
 ## ✨ Özellikler
 
 - 🎮 İnteraktif dart tahtası simülasyonu
+- 🎯 **Yüksek Hassasiyetli Seçim**: 44px dokunma alanları ve event-delegation ile %100 doğruluk
 - 📱 Mobil uyumlu (Mobile-First)
 - 🔌 Offline çalışma (PWA)
 - 📊 4 kriterli performans değerlendirmesi
@@ -13,12 +14,14 @@ Dart oyuncuları için 40-170 arası checkout senaryolarını pratik yapabilece�
 
 ## 🚀 Kullanım
 
-### Web'den:
+### Web'den
+
 1. [GitHub Pages Linki](https://polarcbsengineering.github.io/DartCheckoutGame/) adresini açın
 2. "Add to Home Screen" ile ana ekranınıza ekleyin
 3. Offline olarak kullanabilirsiniz!
 
-### Yerel Geliştirme:
+### Yerel Geliştirme
+
 ```bash
 # Repository'yi klonlayın
 git clone https://github.com/PolarCBSEngineering/DartCheckoutGame.git
@@ -71,4 +74,3 @@ Sorularınız için issue açabilirsiniz.
 ---
 
 **Not:** Bu uygulama eğitim amaçlıdır. Gerçek dart oyunu yerine geçmez.
-
