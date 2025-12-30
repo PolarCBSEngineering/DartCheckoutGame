@@ -1,18 +1,21 @@
 // Service Worker for Dart 501 Checkout Master
-const CACHE_NAME = 'dart-checkout-v1';
+const CACHE_NAME = 'dart-checkout-v2';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/game.js',
-  '/checkout-db.js',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  './',
+  './index.html',
+  './styles.css',
+  './game.js',
+  './checkout-db.js',
+  './manifest.json',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './Bulldozer.jpeg',
+  './Dartboard.svg'
 ];
 
 // Install Event
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
@@ -31,7 +34,9 @@ self.addEventListener('fetch', (event) => {
         if (response) {
           return response;
         }
-        return fetch(event.request);
+        return fetch(event.request).catch(() => {
+          // Optional: fallback for images or pages
+        });
       })
   );
 });
@@ -50,5 +55,6 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
+  return self.clients.claim();
 });
 

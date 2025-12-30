@@ -1,16 +1,15 @@
-/* CSS Variables - Renk Paleti */
 :root {
-    --bg-color: #2c3e50;
-    --board-black: #1a1a1a;
-    --board-white: #ecf0f1;
-    --board-red: #e74c3c;
-    --board-green: #27ae60;
-    --accent-gold: #f1c40f;
-    --text-light: #ecf0f1;
-    --text-dark: #2c3e50;
-    --success-green: #27ae60;
-    --error-red: #e74c3c;
-    --modal-bg: rgba(0, 0, 0, 0.8);
+    --bg-color: #1e272e;
+    --board-black: #000000;
+    --board-white: #f5f5f5;
+    --board-red: #e84118;
+    --board-green: #4cd137;
+    --accent-gold: #fbc531;
+    --text-light: #f5f6fa;
+    --text-dark: #2f3640;
+    --success-green: #4cd137;
+    --error-red: #e84118;
+    --modal-bg: rgba(0, 0, 0, 0.85);
 }
 
 /* Reset & Base Styles */
@@ -60,10 +59,17 @@ body {
 }
 
 .value {
-    font-size: 3rem;
+    font-size: 2.2rem;
+    /* Slightly smaller to fit 3 columns */
     font-weight: bold;
     color: var(--accent-gold);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.total-score-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .dart-counter {
@@ -100,23 +106,47 @@ body {
     width: 100%;
     height: 100%;
     cursor: pointer;
+    shape-rendering: geometricPrecision;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
+}
+
+svg * {
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .clickable-zone {
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, fill 0.2s;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
 }
 
-.clickable-zone:hover {
-    opacity: 0.5 !important;
-    fill: var(--accent-gold);
+@media (hover: hover) {
+    .clickable-zone:hover {
+        opacity: 0.5 !important;
+        fill: var(--accent-gold);
+    }
+}
+
+.board-disabled {
+    pointer-events: none !important;
+    opacity: 0.7;
+    filter: grayscale(0.5);
+    transition: all 0.3s ease;
 }
 
 /* Footer */
 .footer {
-    padding: 1rem;
+    padding: 0.8rem 1rem;
     background-color: rgba(0, 0, 0, 0.3);
-    border-top: 2px solid var(--accent-gold);
+    border-top: 1px solid rgba(251, 197, 49, 0.2);
+    /* Subtler border */
 }
 
 .dart-log {
@@ -169,9 +199,24 @@ body {
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+.number-text text {
+    font-weight: bold;
+    fill: var(--accent-gold);
 }
 
 /* Buttons */
@@ -197,6 +242,116 @@ body {
     transform: scale(0.98);
 }
 
+.d-none {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+.d-block {
+    display: block !important;
+}
+
+/* Splash Screen */
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    transition: opacity 0.5s ease-out, visibility 0.5s;
+}
+
+.splash-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.splash-content {
+    text-align: center;
+    max-width: 90%;
+    width: 400px;
+    padding: 2rem;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 20px;
+    border: 2px solid var(--accent-gold);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.8s ease-out;
+}
+
+.splash-image {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.splash-title {
+    font-size: 1.8rem;
+    color: var(--accent-gold);
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.splash-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.8;
+    margin-bottom: 2rem;
+}
+
+#splashStartBtn {
+    max-width: 250px;
+    margin: 0 auto;
+}
+
+/* Countdown Overlay */
+.countdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2100;
+}
+
+.countdown-overlay.d-none {
+    pointer-events: none !important;
+}
+
+.countdown-text {
+    font-size: 8rem;
+    font-weight: 800;
+    color: var(--accent-gold);
+    text-shadow: 0 0 30px var(--accent-gold);
+    animation: countdownPulse 1s ease-out infinite;
+}
+
+@keyframes countdownPulse {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    20% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
 /* Modal */
 .modal {
     position: fixed;
@@ -213,20 +368,29 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .modal-content {
-    background-color: var(--bg-color);
-    padding: 2rem;
+    background-color: #1a252f;
+    padding: 10px 8px !important;
     border-radius: 12px;
-    max-width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
     border: 2px solid var(--accent-gold);
+    width: 250px !important;
+    max-width: 95vw !important;
+    /* Allow small margin on 280px screens */
+    margin: 0 auto;
+    box-sizing: border-box !important;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
     animation: slideUp 0.3s;
+    overflow: hidden;
 }
 
 @keyframes slideUp {
@@ -234,6 +398,7 @@ body {
         transform: translateY(50px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -263,42 +428,129 @@ body {
 }
 
 .modal-content h3 {
-    margin-bottom: 1.5rem;
     color: var(--accent-gold);
+    margin-bottom: 0.2rem;
+    /* Minimum gap */
+    font-size: 1.2rem;
     text-align: center;
+}
+
+.zone-numbers {
+    color: #95a5a6;
+    font-size: 0.8rem;
+    margin: 0 0 0.8rem 0;
+    text-align: center;
+    letter-spacing: 1px;
 }
 
 /* Number Buttons (Zoom Modal) */
 .number-buttons {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px !important;
+    /* Exact 5px gap as requested */
+    margin-top: 0.5rem;
+    padding: 0;
+    justify-items: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .number-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-}
-
-.number-label {
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
+    align-items: center;
+    gap: 0.6rem;
+    /* Slightly more gap for better precision */
+    width: 100%;
 }
 
 .btn-dart {
-    padding: 0.8rem;
-    font-size: 1rem;
+    width: 100%;
+    min-height: 44px;
+    /* Professional touch standard */
+    padding: 0.5rem 0.3rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(45, 52, 54, 0.8);
+    transition: all 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.btn-dart * {
+    pointer-events: none !important;
+    /* Force click onto the button root */
+}
+
+.btn-dart.active-selection {
+    background: var(--accent-gold) !important;
+    color: #000 !important;
+    transform: scale(0.95);
+}
+
+/* Distinctive types */
+.btn-dart[data-type="D"] {
+    color: #2ecc71;
+    border-color: rgba(46, 204, 113, 0.3);
+}
+
+.btn-dart[data-type="T"] {
+    color: #e74c3c;
+    border-color: rgba(231, 76, 60, 0.3);
+}
+
+.btn-dart[data-type="S"] {
+    color: #ecf0f1;
+    opacity: 0.9;
+}
+
+.btn-dart:hover {
+    background: var(--accent-gold);
+    color: #000;
+}
+
+.number-label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--accent-gold);
+    margin-bottom: 2px;
+    text-align: center;
+    line-height: 1.1;
+}
+
+.center-content {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    grid-template-columns: none !important;
+    /* Disable grid for centering */
+}
+
+.center-content .number-group {
+    width: auto !important;
+}
+
+.btn-dart {
+    width: 42px !important;
+    /* (250 - 16 padding - 20 gaps) / 5 = 42.8 -> 42px safe fit */
+    height: 32px;
+    /* Shorter buttons */
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.85rem;
     font-weight: bold;
     border: 2px solid var(--accent-gold);
     background-color: transparent;
     color: var(--text-light);
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s;
 }
 
 .btn-dart:hover {
@@ -314,12 +566,44 @@ body {
 /* Result Modal */
 .result-content {
     text-align: center;
-    min-width: 300px;
+}
+
+#resultModal .modal-content {
+    width: 250px !important;
+    max-width: calc(100vw - 20px) !important;
+    padding: 15px 10px !important;
+    box-sizing: border-box !important;
+    margin: 0 auto;
 }
 
 .score-breakdown {
-    margin: 2rem 0;
+    margin: 1.5rem 0;
     text-align: left;
+}
+
+.user-path-display {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid rgba(251, 197, 49, 0.3);
+}
+
+.user-path-display .label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin: 0;
+}
+
+.user-path-display .path-values {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--accent-gold);
 }
 
 .score-item {
@@ -341,13 +625,72 @@ body {
 }
 
 .total-score {
-    margin: 2rem 0;
-    padding: 1.5rem;
+    margin: 1.5rem 0;
+    padding: 1.2rem;
     background-color: var(--accent-gold);
-    color: var(--text-dark);
+    color: #333;
+    /* Darker for better contrast */
     border-radius: 12px;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+    font-weight: 800;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.total-score .label {
+    display: block;
+    font-size: 1rem;
+    color: #333;
+    /* Matched to dark text for better distinction on gold */
+    margin-bottom: 0.3rem;
     font-weight: bold;
+}
+
+.total-score .value {
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+}
+
+.session-total-score {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+}
+
+#totalScore {
+    color: var(--accent-gold);
+    font-weight: bold;
+}
+
+/* Optimal Paths */
+.optimal-paths {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: left;
+}
+
+.optimal-paths h4 {
+    color: var(--accent-gold);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.paths-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.path-tag {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.95rem;
+    color: var(--accent-gold);
 }
 
 /* Success/Error Animations */
@@ -356,8 +699,15 @@ body {
 }
 
 @keyframes successFlash {
-    0%, 100% { background-color: var(--bg-color); }
-    50% { background-color: var(--success-green); }
+
+    0%,
+    100% {
+        background-color: var(--bg-color);
+    }
+
+    50% {
+        background-color: var(--success-green);
+    }
 }
 
 .error-flash {
@@ -365,8 +715,15 @@ body {
 }
 
 @keyframes errorFlash {
-    0%, 100% { background-color: var(--bg-color); }
-    50% { background-color: var(--error-red); }
+
+    0%,
+    100% {
+        background-color: var(--bg-color);
+    }
+
+    50% {
+        background-color: var(--error-red);
+    }
 }
 
 /* Responsive Design */
@@ -374,17 +731,17 @@ body {
     .value {
         font-size: 2rem;
     }
-    
+
     .header {
         flex-direction: column;
         gap: 1rem;
     }
-    
+
     .score-display {
         width: 100%;
         justify-content: space-around;
     }
-    
+
     .number-buttons {
         grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
     }
@@ -394,13 +751,49 @@ body {
     .value {
         font-size: 1.5rem;
     }
-    
+
     .modal-content {
         padding: 1.5rem;
+        width: 100%;
+        margin: 0 10px;
     }
-    
+
     .number-buttons {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.4rem;
+    }
+
+    .btn-dart {
+        width: 45px;
+        /* Slightly smaller for mobile but still 5 columns */
     }
 }
 
+/* SVG Dartboard Classes */
+.segment-black {
+    fill: var(--board-black);
+}
+
+.segment-white {
+    fill: var(--board-white);
+}
+
+.ring-red {
+    fill: var(--board-red);
+}
+
+.ring-green {
+    fill: var(--board-green);
+}
+
+.bull-outer {
+    fill: var(--board-green);
+}
+
+.bull-inner {
+    fill: var(--board-red);
+}
+
+.wire {
+    fill: black;
+}

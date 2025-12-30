@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,23 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 </head>
+
 <body>
+    <!-- Splash Screen -->
+    <div id="splashScreen" class="splash-screen">
+        <div class="splash-content">
+            <img src="Bulldozer.jpeg" alt="Bulldozer" class="splash-image">
+            <h1 class="splash-title">Dart 501 Master</h1>
+            <p class="splash-subtitle">Antrenman Başlasın!</p>
+            <button class="btn-primary" id="splashStartBtn">Oyuna Başla</button>
+        </div>
+    </div>
+
+    <!-- Countdown Overlay -->
+    <div id="countdownOverlay" class="countdown-overlay d-none">
+        <div id="countdownText" class="countdown-text"></div>
+    </div>
+
     <!-- Header: Skor ve Dart Sayacı -->
     <header class="header">
         <div class="score-display">
@@ -21,6 +38,10 @@
             <div class="current-score">
                 <span class="label">Kalan</span>
                 <span class="value" id="currentScore">--</span>
+            </div>
+            <div class="total-score-header">
+                <span class="label">Toplam</span>
+                <span class="value" id="headerTotalScore">0</span>
             </div>
         </div>
         <div class="dart-counter">
@@ -33,34 +54,117 @@
     <!-- Main: Dart Tahtası -->
     <main class="main">
         <div class="board-container">
-            <svg id="dartBoard" class="dart-board" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-                <!-- Dart tahtası SVG içeriği buraya eklenecek -->
-                <circle cx="250" cy="250" r="240" fill="#1a1a1a" stroke="#ecf0f1" stroke-width="2"/>
-                <circle cx="250" cy="250" r="200" fill="#27ae60"/>
-                <circle cx="250" cy="250" r="160" fill="#1a1a1a"/>
-                <circle cx="250" cy="250" r="120" fill="#e74c3c"/>
-                <circle cx="250" cy="250" r="80" fill="#1a1a1a"/>
-                
+            <svg id="dartBoard" class="dart-board" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <!-- Template for Red/Black segments (20, 18, 13, 10, 2, 3, 7, 8, 14, 12) -->
+                    <g id="segment-red-black">
+                        <!-- Double -->
+                        <path d="M 885.2 439 A 390 390 0 0 1 885.2 561 L 914.8 565.7 A 420 420 0 0 0 914.8 434.3 Z"
+                            class="ring-red" stroke="none" />
+                        <!-- Single Outer -->
+                        <path d="M 746.9 460.9 A 250 250 0 0 1 746.9 539.1 L 885.2 561 A 390 390 0 0 0 885.2 439 Z"
+                            class="segment-black" stroke="none" />
+                        <!-- Treble -->
+                        <path d="M 717.3 464.6 A 220 220 0 0 1 717.3 535.4 L 746.9 539.1 A 250 250 0 0 0 746.9 460.9 Z"
+                            class="ring-red" stroke="none" />
+                        <!-- Single Inner -->
+                        <path d="M 549.4 492.2 A 50 50 0 0 1 549.4 507.8 L 717.3 535.4 A 220 220 0 0 0 717.3 464.6 Z"
+                            class="segment-black" stroke="none" />
+                    </g>
+                    <!-- Template for Green/White segments (1, 4, 6, 15, 17, 19, 16, 11, 9, 5) -->
+                    <g id="segment-green-white">
+                        <path d="M 885.2 439 A 390 390 0 0 1 885.2 561 L 914.8 565.7 A 420 420 0 0 0 914.8 434.3 Z"
+                            class="ring-green" stroke="none" />
+                        <path d="M 746.9 460.9 A 250 250 0 0 1 746.9 539.1 L 885.2 561 A 390 390 0 0 0 885.2 439 Z"
+                            class="segment-white" stroke="none" />
+                        <path d="M 717.3 464.6 A 220 220 0 0 1 717.3 535.4 L 746.9 539.1 A 250 250 0 0 0 746.9 460.9 Z"
+                            class="ring-green" stroke="none" />
+                        <path d="M 549.4 492.2 A 50 50 0 0 1 549.4 507.8 L 717.3 535.4 A 220 220 0 0 0 717.3 464.6 Z"
+                            class="segment-white" stroke="none" />
+                    </g>
+                </defs>
+
+                <!-- Background/Outer Ring -->
+                <circle cx="500" cy="500" r="490" fill="black" />
+                <circle cx="500" cy="500" r="460" class="wire" stroke-width="4" stroke="#d1d8e0" fill="black" />
+
+                <!-- 20 Visual Segments -->
+                <g id="board-visuals" pointer-events="none">
+                    <use href="#segment-red-black" transform="rotate(-90, 500, 500)" /> <!-- 20 -->
+                    <use href="#segment-green-white" transform="rotate(-72, 500, 500)" /> <!-- 1 -->
+                    <use href="#segment-red-black" transform="rotate(-54, 500, 500)" /> <!-- 18 -->
+                    <use href="#segment-green-white" transform="rotate(-36, 500, 500)" /> <!-- 4 -->
+                    <use href="#segment-red-black" transform="rotate(-18, 500, 500)" /> <!-- 13 -->
+                    <use href="#segment-green-white" transform="rotate(0, 500, 500)" /> <!-- 6 -->
+                    <use href="#segment-red-black" transform="rotate(18, 500, 500)" /> <!-- 10 -->
+                    <use href="#segment-green-white" transform="rotate(36, 500, 500)" /> <!-- 15 -->
+                    <use href="#segment-red-black" transform="rotate(54, 500, 500)" /> <!-- 2 -->
+                    <use href="#segment-green-white" transform="rotate(72, 500, 500)" /> <!-- 17 -->
+                    <use href="#segment-red-black" transform="rotate(90, 500, 500)" /> <!-- 3 -->
+                    <use href="#segment-green-white" transform="rotate(108, 500, 500)" /> <!-- 19 -->
+                    <use href="#segment-red-black" transform="rotate(126, 500, 500)" /> <!-- 7 -->
+                    <use href="#segment-green-white" transform="rotate(144, 500, 500)" /> <!-- 16 -->
+                    <use href="#segment-red-black" transform="rotate(162, 500, 500)" /> <!-- 8 -->
+                    <use href="#segment-green-white" transform="rotate(180, 500, 500)" /> <!-- 11 -->
+                    <use href="#segment-red-black" transform="rotate(198, 500, 500)" /> <!-- 14 -->
+                    <use href="#segment-green-white" transform="rotate(216, 500, 500)" /> <!-- 9 -->
+                    <use href="#segment-red-black" transform="rotate(234, 500, 500)" /> <!-- 12 -->
+                    <use href="#segment-green-white" transform="rotate(252, 500, 500)" /> <!-- 5 -->
+                </g>
+
                 <!-- Bull -->
-                <circle cx="250" cy="250" r="30" fill="#ecf0f1"/>
-                <circle cx="250" cy="250" r="15" fill="#e74c3c"/>
-                
-                <!-- 5 Tıklanabilir Bölge (görünmez overlay) -->
-                <g id="zones">
-                    <!-- Üst Çeyrek: 12-5-20-1-18 -->
-                    <path id="zone-top" class="clickable-zone" d="M 250 10 L 250 250 L 10 250 A 240 240 0 0 1 250 10 Z" fill="transparent" opacity="0.3"/>
-                    
-                    <!-- Sağ Çeyrek: 4-13-6-10-15 -->
-                    <path id="zone-right" class="clickable-zone" d="M 250 10 L 490 250 L 250 250 A 240 240 0 0 1 250 10 Z" fill="transparent" opacity="0.3"/>
-                    
-                    <!-- Alt Çeyrek: 2-17-3-19-7 -->
-                    <path id="zone-bottom" class="clickable-zone" d="M 250 490 L 250 250 L 490 250 A 240 240 0 0 1 250 490 Z" fill="transparent" opacity="0.3"/>
-                    
-                    <!-- Sol Çeyrek: 16-8-11-14-9 -->
-                    <path id="zone-left" class="clickable-zone" d="M 10 250 L 250 250 L 250 490 A 240 240 0 0 1 10 250 Z" fill="transparent" opacity="0.3"/>
-                    
-                    <!-- Bull Alanı -->
-                    <circle id="zone-bull" class="clickable-zone" cx="250" cy="250" r="30" fill="transparent" opacity="0.3"/>
+                <g pointer-events="none">
+                    <circle cx="500" cy="500" r="35" class="bull-outer" stroke="#d1d8e0" stroke-width="1" />
+                    <circle cx="500" cy="500" r="15" class="bull-inner" stroke="#d1d8e0" stroke-width="1" />
+                </g>
+
+                <!-- Wires (Visual overlap) -->
+                <g stroke="#d1d8e0" stroke-width="1" fill="none" opacity="0.4" pointer-events="none">
+                    <circle cx="500" cy="500" r="420" />
+                    <circle cx="500" cy="500" r="390" />
+                    <circle cx="500" cy="500" r="260" />
+                    <circle cx="500" cy="500" r="230" />
+                </g>
+
+                <!-- Interaction Layer: Clickable Zones -->
+                <g id="interactionLayer">
+                    <!-- Quarter sections: donut-shaped (min-r=80) to clear expanded bull -->
+                    <path id="zone-top" class="clickable-zone"
+                        d="M 500 420 L 161 161 A 480 480 0 0 1 839 161 L 500 420 Z" fill="transparent" />
+                    <path id="zone-right" class="clickable-zone"
+                        d="M 580 500 L 839 161 A 480 480 0 0 1 839 839 L 580 500 Z" fill="transparent" />
+                    <path id="zone-bottom" class="clickable-zone"
+                        d="M 500 580 L 839 839 A 480 480 0 0 1 161 839 L 500 580 Z" fill="transparent" />
+                    <path id="zone-left" class="clickable-zone"
+                        d="M 420 500 L 161 839 A 480 480 0 0 1 161 161 L 420 500 Z" fill="transparent" />
+
+                    <!-- Bull zone: Expanded r=80 and placed last for top priority -->
+                    <circle id="zone-bull" class="clickable-zone" cx="500" cy="500" r="80" fill="transparent" />
+                </g>
+
+                <!-- Numbers (Polar Coordinates R=455) -->
+                <g class="number-text" pointer-events="none" font-size="34" fill="var(--accent-gold)"
+                    font-weight="bold">
+                    <text x="500" y="60" text-anchor="middle">20</text>
+                    <text x="641" y="83" text-anchor="middle">1</text>
+                    <text x="767" y="147" text-anchor="middle">18</text>
+                    <text x="868" y="248" text-anchor="middle">4</text>
+                    <text x="932" y="374" text-anchor="middle">13</text>
+                    <text x="955" y="515" text-anchor="middle">6</text>
+                    <text x="932" y="656" text-anchor="middle">10</text>
+                    <text x="868" y="782" text-anchor="middle">15</text>
+                    <text x="767" y="883" text-anchor="middle">2</text>
+                    <text x="641" y="947" text-anchor="middle">17</text>
+                    <text x="500" y="970" text-anchor="middle">3</text>
+                    <text x="359" y="947" text-anchor="middle">19</text>
+                    <text x="233" y="883" text-anchor="middle">7</text>
+                    <text x="132" y="782" text-anchor="middle">16</text>
+                    <text x="68" y="656" text-anchor="middle">8</text>
+                    <text x="45" y="515" text-anchor="middle">11</text>
+                    <text x="68" y="374" text-anchor="middle">14</text>
+                    <text x="132" y="248" text-anchor="middle">9</text>
+                    <text x="233" y="147" text-anchor="middle">12</text>
+                    <text x="359" y="83" text-anchor="middle">5</text>
                 </g>
             </svg>
         </div>
@@ -73,27 +177,31 @@
             <div class="log-items" id="logItems"></div>
         </div>
         <div class="message-area" id="messageArea"></div>
-        <button class="btn-primary" id="startBtn" style="display: block;">Başla</button>
-        <button class="btn-primary" id="continueBtn" style="display: none;">Devam Et</button>
+        <!-- Footer buttons removed; game starts via countdown -->
     </footer>
 
     <!-- Zoom Modal: Detaylı Seçim -->
-    <div id="zoomModal" class="modal" style="display: none;">
+    <div id="zoomModal" class="modal d-none">
         <div class="modal-content">
             <button class="btn-close" id="closeModal">✕</button>
             <h3 id="zoneTitle">Bölge Seçimi</h3>
+            <p id="zoneNumbers" class="zone-numbers"></p>
             <div class="number-buttons" id="numberButtons"></div>
         </div>
     </div>
 
     <!-- Sonuç Modal: Puanlama -->
-    <div id="resultModal" class="modal" style="display: none;">
+    <div id="resultModal" class="modal d-none">
         <div class="modal-content result-content">
             <h2>Tur Sonucu</h2>
+            <div id="userPathDisplay" class="user-path-display"></div>
             <div class="score-breakdown" id="scoreBreakdown"></div>
             <div class="total-score">
-                <span class="label">Toplam Puan:</span>
-                <span class="value" id="totalScore">0</span>
+                <span class="label">Tur Puanı:</span>
+                <span class="value" id="turnTotal">0</span>
+            </div>
+            <div class="session-total-score">
+                Kümülatif Skoru: <span id="totalScore">0</span>
             </div>
             <button class="btn-primary" id="closeResult">Devam Et</button>
         </div>
@@ -101,17 +209,17 @@
 
     <script src="checkout-db.js"></script>
     <script src="game.js"></script>
-    
+
     <!-- Service Worker Registration -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('sw.js')
                     .then(reg => console.log('Service Worker registered'))
                     .catch(err => console.log('Service Worker registration failed'));
             });
         }
     </script>
 </body>
-</html>
 
+</html>

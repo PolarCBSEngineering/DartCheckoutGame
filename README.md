@@ -14,14 +14,14 @@ Dart oyuncuları için 40-170 arası checkout senaryolarını pratik yapabilece�
 ## 🚀 Kullanım
 
 ### Web'den:
-1. [GitHub Pages Linki](https://[username].github.io/DartCheckoutGame/) adresini açın
+1. [GitHub Pages Linki](https://polarcbsengineering.github.io/DartCheckoutGame/) adresini açın
 2. "Add to Home Screen" ile ana ekranınıza ekleyin
 3. Offline olarak kullanabilirsiniz!
 
 ### Yerel Geliştirme:
 ```bash
 # Repository'yi klonlayın
-git clone https://github.com/[username]/DartCheckoutGame.git
+git clone https://github.com/PolarCBSEngineering/DartCheckoutGame.git
 
 # Klasöre gidin
 cd DartCheckoutGame

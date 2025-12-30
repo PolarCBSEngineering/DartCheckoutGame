@@ -1,12 +1,13 @@
 {
   "name": "Dart 501 Checkout Master",
-  "short_name": "Dart Checkout",
-  "description": "Dart oyuncuları için checkout pratik uygulaması",
-  "start_url": "/",
+  "short_name": "Dart Master",
+  "description": "Dart oyuncuları için profesyonel checkout pratik uygulaması",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#2c3e50",
-  "theme_color": "#2c3e50",
-  "orientation": "portrait",
+  "background_color": "#1a1a1a",
+  "theme_color": "#accent-gold",
+  "orientation": "any",
   "icons": [
     {
       "src": "icons/icon-192.png",
