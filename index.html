@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dart 501 Checkout Master - Checkout senaryolarını pratik yapın">
+    <meta name="theme-color" content="#2c3e50">
+    <title>Dart 501 Checkout Master</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+</head>
+<body>
+    <!-- Header: Skor ve Dart Sayacı -->
+    <header class="header">
+        <div class="score-display">
+            <div class="target-score">
+                <span class="label">Hedef</span>
+                <span class="value" id="targetScore">--</span>
+            </div>
+            <div class="current-score">
+                <span class="label">Kalan</span>
+                <span class="value" id="currentScore">--</span>
+            </div>
+        </div>
+        <div class="dart-counter">
+            <div class="dart-icon" id="dart1">🎯</div>
+            <div class="dart-icon" id="dart2">🎯</div>
+            <div class="dart-icon" id="dart3">🎯</div>
+        </div>
+    </header>
+
+    <!-- Main: Dart Tahtası -->
+    <main class="main">
+        <div class="board-container">
+            <svg id="dartBoard" class="dart-board" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                <!-- Dart tahtası SVG içeriği buraya eklenecek -->
+                <circle cx="250" cy="250" r="240" fill="#1a1a1a" stroke="#ecf0f1" stroke-width="2"/>
+                <circle cx="250" cy="250" r="200" fill="#27ae60"/>
+                <circle cx="250" cy="250" r="160" fill="#1a1a1a"/>
+                <circle cx="250" cy="250" r="120" fill="#e74c3c"/>
+                <circle cx="250" cy="250" r="80" fill="#1a1a1a"/>
+                
+                <!-- Bull -->
+                <circle cx="250" cy="250" r="30" fill="#ecf0f1"/>
+                <circle cx="250" cy="250" r="15" fill="#e74c3c"/>
+                
+                <!-- 5 Tıklanabilir Bölge (görünmez overlay) -->
+                <g id="zones">
+                    <!-- Üst Çeyrek: 12-5-20-1-18 -->
+                    <path id="zone-top" class="clickable-zone" d="M 250 10 L 250 250 L 10 250 A 240 240 0 0 1 250 10 Z" fill="transparent" opacity="0.3"/>
+                    
+                    <!-- Sağ Çeyrek: 4-13-6-10-15 -->
+                    <path id="zone-right" class="clickable-zone" d="M 250 10 L 490 250 L 250 250 A 240 240 0 0 1 250 10 Z" fill="transparent" opacity="0.3"/>
+                    
+                    <!-- Alt Çeyrek: 2-17-3-19-7 -->
+                    <path id="zone-bottom" class="clickable-zone" d="M 250 490 L 250 250 L 490 250 A 240 240 0 0 1 250 490 Z" fill="transparent" opacity="0.3"/>
+                    
+                    <!-- Sol Çeyrek: 16-8-11-14-9 -->
+                    <path id="zone-left" class="clickable-zone" d="M 10 250 L 250 250 L 250 490 A 240 240 0 0 1 10 250 Z" fill="transparent" opacity="0.3"/>
+                    
+                    <!-- Bull Alanı -->
+                    <circle id="zone-bull" class="clickable-zone" cx="250" cy="250" r="30" fill="transparent" opacity="0.3"/>
+                </g>
+            </svg>
+        </div>
+    </main>
+
+    <!-- Footer: Dart Log ve Mesajlar -->
+    <footer class="footer">
+        <div class="dart-log" id="dartLog">
+            <span class="log-label">Atışlar:</span>
+            <div class="log-items" id="logItems"></div>
+        </div>
+        <div class="message-area" id="messageArea"></div>
+        <button class="btn-primary" id="startBtn" style="display: block;">Başla</button>
+        <button class="btn-primary" id="continueBtn" style="display: none;">Devam Et</button>
+    </footer>
+
+    <!-- Zoom Modal: Detaylı Seçim -->
+    <div id="zoomModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button class="btn-close" id="closeModal">✕</button>
+            <h3 id="zoneTitle">Bölge Seçimi</h3>
+            <div class="number-buttons" id="numberButtons"></div>
+        </div>
+    </div>
+
+    <!-- Sonuç Modal: Puanlama -->
+    <div id="resultModal" class="modal" style="display: none;">
+        <div class="modal-content result-content">
+            <h2>Tur Sonucu</h2>
+            <div class="score-breakdown" id="scoreBreakdown"></div>
+            <div class="total-score">
+                <span class="label">Toplam Puan:</span>
+                <span class="value" id="totalScore">0</span>
+            </div>
+            <button class="btn-primary" id="closeResult">Devam Et</button>
+        </div>
+    </div>
+
+    <script src="checkout-db.js"></script>
+    <script src="game.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed'));
+            });
+        }
+    </script>
+</body>
+</html>
+
